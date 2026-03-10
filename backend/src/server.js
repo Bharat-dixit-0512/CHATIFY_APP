@@ -2,12 +2,17 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
+import { connectDB } from "./lib/db.js";
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.join(__dirname, "../.env") });
 const app = express();
-const __dirname = path.resolve();
+app.use(express.json()); //req.body
+
 const PORT = process.env.PORT || 3000;
 
 const allowedOrigins = (process.env.CLIENT_URLS || "")
@@ -18,13 +23,17 @@ const allowedOrigins = (process.env.CLIENT_URLS || "")
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        allowedOrigins.length === 0 ||
+        allowedOrigins.includes(origin)
+      ) {
         return callback(null, true);
       }
       return callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -38,11 +47,15 @@ app.use("/api/messages", messageRoutes);
 
 const shouldServeFrontend = process.env.SERVE_FRONTEND === "true";
 if (process.env.NODE_ENV === "production" && shouldServeFrontend) {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  const frontendDistPath = path.resolve(__dirname, "../../frontend/dist");
+  app.use(express.static(frontendDistPath));
 
   app.get("*", (_, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+    res.sendFile(path.join(frontendDistPath, "index.html"));
   });
 }
 
-app.listen(PORT, () => console.log(`Server Running on ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server Running on ${PORT}`);
+  connectDB();
+});
