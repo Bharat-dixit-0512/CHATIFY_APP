@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@arcjet/inspect": "^1.3.0",
+    "@arcjet/node": "^1.3.0",
     "bcryptjs": "^2.4.3",
     "chatify_app": "file:..",
     "cloudinary": "^2.9.0",
