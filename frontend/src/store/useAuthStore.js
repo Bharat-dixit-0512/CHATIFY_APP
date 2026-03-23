@@ -3,7 +3,14 @@ import axiosInstance from "../lib/axios.js";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 
-const SOCKET_URL = import.meta.env.MODE === "development" ? "http://localhost:3000" : "/";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const SOCKET_URL = API_URL.replace(/\/api\/?$/, "");
+
+const getErrorMessage = (error, fallbackMessage) =>
+  error?.response?.data?.message ||
+  error?.response?.data?.error ||
+  error?.message ||
+  fallbackMessage;
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -36,7 +43,7 @@ export const useAuthStore = create((set, get) => ({
 
       toast.success("Account created successfully!");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Signup failed");
+      toast.error(getErrorMessage(error, "Signup failed"));
     } finally {
       set({ isSigningUp: false });
     }
@@ -51,7 +58,7 @@ export const useAuthStore = create((set, get) => ({
 
       toast.success("Logged in successfully!");
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
+      toast.error(getErrorMessage(error, "Login failed"));
     } finally {
       set({ isLoggingIn: false });
     }

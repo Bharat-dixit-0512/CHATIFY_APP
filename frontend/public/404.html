@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatify</title>
+    <script>
+      const redirectTo = "/" + (location.pathname.startsWith("/") ? "" : "/") + location.pathname.replace(/^\/+/, "");
+      location.replace("/?redirect=" + encodeURIComponent(location.pathname + location.search + location.hash));
+    </script>
+  </head>
+  <body></body>
+  </html>
