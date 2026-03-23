@@ -48,30 +48,3 @@ export function createWelcomeEmailTemplate(name, clientURL) {
   </html>
   `;
 }
-
-export function createResetPasswordEmailTemplate(name, resetUrl) {
-  return `
-  <!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Your Password</title>
-  </head>
-  <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f5f5f5;">
-    <div style="background: linear-gradient(to right, #0ea5e9, #2563eb); padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
-      <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">Reset Your Chatify Password</h1>
-    </div>
-    <div style="background-color: #ffffff; padding: 35px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-      <p style="font-size: 18px; color: #2563eb;"><strong>Hello ${name},</strong></p>
-      <p>We received a request to reset your password. Click the button below to create a new one.</p>
-      <div style="text-align: center; margin: 30px 0;">
-        <a href="${resetUrl}" style="background: linear-gradient(to right, #0ea5e9, #2563eb); color: white; text-decoration: none; padding: 12px 30px; border-radius: 50px; font-weight: 600; display: inline-block;">Reset Password</a>
-      </div>
-      <p>This link will expire in 15 minutes. If you did not request a password reset, you can safely ignore this email.</p>
-      <p style="word-break: break-all; color: #64748b; font-size: 14px;">${resetUrl}</p>
-    </div>
-  </body>
-  </html>
-  `;
-}

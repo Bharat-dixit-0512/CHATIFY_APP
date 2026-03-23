@@ -1,10 +1,9 @@
 import express from "express";
 import {
+  changePassword,
   checkAuth,
-  forgotPassword,
   login,
   logout,
-  resetPassword,
   signup,
   updateProfile,
 } from "../controllers/auth.controller.js";
@@ -18,13 +17,10 @@ router.post("/signup", signup);
 
 router.post("/login" ,login);
 
-router.post("/forgot-password", forgotPassword);
-
-router.post("/reset-password/:token", resetPassword);
-
 router.post("/logout",logout);
 
 router.put("/update-profile",protectRoute, updateProfile);
+router.put("/change-password", protectRoute, changePassword);
 
 router.get("/check", protectRoute, checkAuth);
 
