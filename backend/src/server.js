@@ -1,19 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser"
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
+import { app, server } from "./lib/socket.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../.env") });
-const app = express();
-app.use(express.json()); //req.body
 app.use(cookieParser());
+app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
@@ -38,8 +38,6 @@ app.use(
   }),
 );
 
-app.use(express.json());
-
 app.get("/api/health", (_, res) => {
   res.status(200).json({ status: "ok" });
 });
@@ -57,7 +55,7 @@ if (process.env.NODE_ENV === "production" && shouldServeFrontend) {
   });
 }
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server Running on ${PORT}`);
   connectDB();
 });
