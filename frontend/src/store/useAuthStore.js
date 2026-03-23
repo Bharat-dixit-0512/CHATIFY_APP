@@ -3,7 +3,10 @@ import axiosInstance from "../lib/axios.js";
 import { io } from "socket.io-client";
 import toast from "react-hot-toast";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const rawApiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000/api";
+const API_URL = rawApiUrl.replace(/\/+$/, "").endsWith("/api")
+  ? rawApiUrl.replace(/\/+$/, "")
+  : `${rawApiUrl.replace(/\/+$/, "")}/api`;
 const SOCKET_URL = API_URL.replace(/\/api\/?$/, "");
 
 const getErrorMessage = (error, fallbackMessage) =>
