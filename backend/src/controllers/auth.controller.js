@@ -1,7 +1,11 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import crypto from "crypto";
 import { cookieOptions, generateToken } from "../lib/utils.js";
-import { sendWelcomeEmail } from "../emails/emailHandlers.js";
+import {
+  sendResetPasswordEmail,
+  sendWelcomeEmail,
+} from "../emails/emailHandlers.js";
 import { ENV } from "../lib/env.js";
 import cloudinary from "../lib/cloudinary.js";
 
@@ -154,4 +158,81 @@ export const updateProfile = async (req, res) => {
 
 export const checkAuth = (req, res) => {
   res.status(200).json(req.user);
+};
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
+
+    if (!user) {
+      return res.status(200).json({
+        message: "If an account exists for this email, a reset link has been sent.",
+      });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetPasswordExpiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiresAt = resetPasswordExpiresAt;
+    await user.save();
+
+    const resetUrl = `${ENV.CLIENT_URL}/reset-password/${resetToken}`;
+    await sendResetPasswordEmail(user.email, user.fullName, resetUrl);
+
+    return res.status(200).json({
+      message: "If an account exists for this email, a reset link has been sent.",
+    });
+  } catch (error) {
+    console.error("Error in forgotPassword controller:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 Characters",
+      });
+    }
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Reset link is invalid or expired",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+    user.resetPasswordToken = null;
+    user.resetPasswordExpiresAt = null;
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password reset successful. Please log in.",
+    });
+  } catch (error) {
+    console.error("Error in resetPassword controller:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };

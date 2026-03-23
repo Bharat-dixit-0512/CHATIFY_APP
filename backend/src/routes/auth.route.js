@@ -1,8 +1,10 @@
 import express from "express";
 import {
   checkAuth,
+  forgotPassword,
   login,
   logout,
+  resetPassword,
   signup,
   updateProfile,
 } from "../controllers/auth.controller.js";
@@ -15,6 +17,10 @@ router.use(arcjetProtection)
 router.post("/signup", signup);
 
 router.post("/login" ,login);
+
+router.post("/forgot-password", forgotPassword);
+
+router.post("/reset-password/:token", resetPassword);
 
 router.post("/logout",logout);
 

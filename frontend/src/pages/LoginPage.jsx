@@ -80,6 +80,14 @@ function LoginPage() {
                   </form>
 
                   <div className="mt-8 text-center">
+                    <p className="mb-3">
+                      <Link
+                        to="/forgot-password"
+                        className="font-medium text-indigo-400 hover:underline cursor-pointer"
+                      >
+                        Forgot password?
+                      </Link>
+                    </p>
                     <p className="text-gray-400">
                       Don't have an account?{" "}
                       <Link to="/signup" className="font-medium text-indigo-400 hover:underline cursor-pointer">
