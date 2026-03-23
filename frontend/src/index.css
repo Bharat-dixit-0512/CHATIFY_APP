@@ -2,11 +2,31 @@
 @plugin "daisyui";
 
 @property --border-angle {
-    inherits: false;
-    initial-value: 0deg;
-    syntax: '<angle>';
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
 }
 
+@keyframes border-rotate {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.border-animated-container {
+  --border-angle: 0deg;
+  background:
+    linear-gradient(45deg, #1f2937, #111827 50%, #1f2937) padding-box,
+    conic-gradient(
+      from var(--border-angle),
+      rgba(71, 85, 105, 0.45) 0deg,
+      rgba(99, 102, 241, 0.95) 120deg,
+      rgba(129, 140, 248, 0.95) 180deg,
+      rgba(99, 102, 241, 0.95) 240deg,
+      rgba(71, 85, 105, 0.45) 360deg
+    ) border-box;
+  animation: border-rotate 4s linear infinite;
+}
 
 .input {
   @apply w-full bg-slate-800/50 border border-slate-700 rounded-lg py-2 pl-10 pr-4 text-slate-200 placeholder-slate-400 focus:ring-2 focus:ring-cyan-500 focus:border-transparent;
