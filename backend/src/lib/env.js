@@ -13,6 +13,7 @@ export const ENV = {
   JWT_SECRET: process.env.JWT_SECRET,
   NODE_ENV: process.env.NODE_ENV,
   CLIENT_URL: process.env.CLIENT_URL,
+  CLIENT_URLS: process.env.CLIENT_URLS,
   EMAIL_TEST_TO: process.env.EMAIL_TEST_TO,
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   EMAIL_FROM: process.env.EMAIL_FROM,

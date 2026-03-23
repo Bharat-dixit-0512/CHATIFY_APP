@@ -6,10 +6,14 @@ import { socketAuthMiddleware } from "../middleware/socket.auth.middleware.js";
 
 const app = express();
 const server = http.createServer(app);
+const allowedOrigins = (ENV.CLIENT_URLS || ENV.CLIENT_URL || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 
 const io = new Server(server, {
   cors: {
-    origin: [ENV.CLIENT_URL],
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
     credentials: true,
   },
 });

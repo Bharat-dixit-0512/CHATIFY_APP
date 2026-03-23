@@ -8,29 +8,45 @@ function MessageInput() {
   const { playRandomKeyStrokeSound } = useKeyboardSound();
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
+  const [isSending, setIsSending] = useState(false);
 
   const fileInputRef = useRef(null);
 
   const { sendMessage, isSoundEnabled } = useChatStore();
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!text.trim() && !imagePreview) return;
+    if ((!text.trim() && !imagePreview) || isSending) return;
     if (isSoundEnabled) playRandomKeyStrokeSound();
 
-    sendMessage({
+    const payload = {
       text: text.trim(),
       image: imagePreview,
-    });
-    setText("");
-    setImagePreview("");
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    };
+
+    try {
+      setIsSending(true);
+      await sendMessage(payload);
+      setText("");
+      setImagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    if (!file) return;
+
     if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
+      return;
+    }
+
+    const maxSizeInBytes = 5 * 1024 * 1024;
+    if (file.size > maxSizeInBytes) {
+      toast.error("Please select an image smaller than 5MB");
       return;
     }
 
@@ -88,15 +104,16 @@ function MessageInput() {
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
+          disabled={isSending}
           className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${
             imagePreview ? "text-cyan-500" : ""
-          }`}
+          } ${isSending ? "cursor-not-allowed opacity-50" : ""}`}
         >
           <ImageIcon className="w-5 h-5" />
         </button>
         <button
           type="submit"
-          disabled={!text.trim() && !imagePreview}
+          disabled={(!text.trim() && !imagePreview) || isSending}
           className="bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg px-4 py-2 font-medium hover:from-cyan-600 hover:to-cyan-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <SendIcon className="w-5 h-5" />

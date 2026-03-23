@@ -63,7 +63,7 @@ export const useChatStore = create((set, get) => ({
 
     if (!selectedUser || !authUser) {
       toast.error("No chat selected");
-      return;
+      return false;
     }
 
     const tempId = `temp-${Date.now()}`;
@@ -87,9 +87,11 @@ export const useChatStore = create((set, get) => ({
           message._id === tempId ? res.data : message,
         ),
       });
+      return true;
     } catch (error) {
       set({ messages: messages });
-      toast.error(error.response?.data?.message || "Something went wrong");
+      toast.error(error.response?.data?.message || error.response?.data?.error || "Failed to send message");
+      return false;
     }
   },
 

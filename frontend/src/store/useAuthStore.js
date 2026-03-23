@@ -22,6 +22,7 @@ export const useAuthStore = create((set, get) => ({
   isCheckingAuth: true,
   isSigningUp: false,
   isLoggingIn: false,
+  isUpdatingProfile: false,
 
   checkAuth: async () => {
     try {
@@ -79,13 +80,32 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
+  updateProfile: async (data) => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      set((state) => ({
+        authUser: state.authUser ? { ...state.authUser, profilePic: res.data.profilePic } : res.data,
+      }));
+      toast.success("Profile picture updated");
+      return true;
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Failed to update profile"));
+      return false;
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
+
   connectSocket: () => {
     const { authUser, socket } = get();
     if (!authUser || socket) return;
 
     const socketInstance = io(SOCKET_URL, {
       withCredentials: true,
-      transports: ["websocket"],
+      transports: ["polling", "websocket"],
+      reconnection: true,
+      reconnectionAttempts: 5,
     });
 
     socketInstance.on("connect", () => {
@@ -98,6 +118,10 @@ export const useAuthStore = create((set, get) => ({
 
     socketInstance.on("disconnect", () => {
       set({ onlineUsers: [] });
+    });
+
+    socketInstance.on("connect_error", (error) => {
+      console.log("Socket connection error:", error.message);
     });
 
     set({ socket: socketInstance });

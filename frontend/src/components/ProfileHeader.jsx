@@ -6,7 +6,7 @@ import { useChatStore } from "../store/useChatStore";
 const mouseClickSound = new Audio("/sounds/mouse-click.mp3");
 
 function ProfileHeader() {
-  const { logout, authUser, updateProfile } = useAuthStore();
+  const { logout, authUser, updateProfile, isUpdatingProfile } = useAuthStore();
   const { isSoundEnabled, toggleSound } = useChatStore();
   const [selectedImg, setSelectedImg] = useState(null);
 
@@ -22,7 +22,10 @@ function ProfileHeader() {
     reader.onloadend = async () => {
       const base64Image = reader.result;
       setSelectedImg(base64Image);
-      await updateProfile({ profilePic: base64Image });
+      const success = await updateProfile({ profilePic: base64Image });
+      if (!success) {
+        setSelectedImg(null);
+      }
     };
   };
 
@@ -35,6 +38,7 @@ function ProfileHeader() {
             <button
               className="size-14 rounded-full overflow-hidden relative group"
               onClick={() => fileInputRef.current.click()}
+              disabled={isUpdatingProfile}
             >
               <img
                 src={selectedImg || authUser.profilePic || "/avatar.png"}

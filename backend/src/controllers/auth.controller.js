@@ -122,27 +122,35 @@ export const logout = async (_, res) => {
   });
 };
 
-export const updateProfile=async(req,res)=>{
+export const updateProfile = async (req, res) => {
   try {
-    const {profilePic} =req.body
-    if(!profilePic)return res.status(400).json({
-      message:"Profile pic is required"
-    })
+    const { profilePic } = req.body;
+    if (!profilePic) {
+      return res.status(400).json({
+        message: "Profile pic is required",
+      });
+    }
 
-    const userId=req.user._id
+    const userId = req.user._id;
 
-    const uploadResponse=await cloudinary.uploader.upload(profilePic)
+    const uploadResponse = await cloudinary.uploader.upload(profilePic, {
+      folder: "chatify/profile-pictures",
+    });
 
-    const updatedUser=await User.findByIdAndUpdate(userId,{profilePic:uploadResponse.secure_url},{new:true})
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: uploadResponse.secure_url },
+      { new: true },
+    ).select("-password");
 
-    res.status(200).json(updatedUser)
+    res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("Error in update profile:",error);
+    console.log("Error in update profile:", error);
     res.status(500).json({
-      message:"Internal server error"
+      message: error.message || "Internal server error",
     });
   }
-}
+};
 
 export const checkAuth = (req, res) => {
   res.status(200).json(req.user);

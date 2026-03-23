@@ -9,6 +9,7 @@ import messageRoutes from "./routes/message.route.js";
 import { connectDB } from "./lib/db.js";
 import { app, server } from "./lib/socket.js";
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "../.env") });
@@ -54,6 +55,7 @@ if (process.env.NODE_ENV === "production" && shouldServeFrontend) {
     res.sendFile(path.join(frontendDistPath, "index.html"));
   });
 }
+
 
 server.listen(PORT, () => {
   console.log(`Server Running on ${PORT}`);

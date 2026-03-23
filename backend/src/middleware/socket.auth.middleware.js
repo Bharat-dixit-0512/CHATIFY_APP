@@ -16,7 +16,7 @@ export const socketAuthMiddleware = async (socket, next) => {
     }
 
     // verify the token
-    const decoded = jwt.verify(token, ENV.JWT_SECRET);
+    const decoded = jwt.verify(decodeURIComponent(token), ENV.JWT_SECRET);
     if (!decoded) {
       console.log("Socket connection rejected: Invalid token");
       return next(new Error("Unauthorized - Invalid Token"));
