@@ -48,7 +48,7 @@ function ChatContainer() {
                     msg.senderId === authUser._id
                       ? "bg-cyan-600 text-white"
                       : "bg-slate-800 text-slate-200"
-                  }`}
+                  } ios-emoji`}
                 >
                   {msg.image && (
                     <img src={msg.image} alt="Shared" className="rounded-lg h-48 object-cover" />
