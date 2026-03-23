@@ -9,7 +9,7 @@ function ActiveTabSwitch() {
         onClick={() => setActiveTab("chats")}
         className={`tab ${
           activeTab === "chats" ? "bg-cyan-500/20 text-cyan-400" : "text-slate-400"
-        }`}
+        } cursor-pointer`}
       >
         Chats
       </button>
@@ -18,7 +18,7 @@ function ActiveTabSwitch() {
         onClick={() => setActiveTab("contacts")}
         className={`tab ${
           activeTab === "contacts" ? "bg-cyan-500/20 text-cyan-400" : "text-slate-400"
-        }`}
+        } cursor-pointer`}
       >
         Contacts
       </button>

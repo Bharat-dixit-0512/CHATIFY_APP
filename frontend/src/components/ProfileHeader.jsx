@@ -48,7 +48,7 @@ function ProfileHeader() {
           {/* AVATAR */}
           <div className="avatar online">
             <button
-              className="size-14 rounded-full overflow-hidden relative group"
+              className="size-14 rounded-full overflow-hidden relative group cursor-pointer disabled:cursor-not-allowed"
               onClick={() => fileInputRef.current.click()}
               disabled={isUpdatingProfile}
             >
@@ -85,7 +85,7 @@ function ProfileHeader() {
         <div className="flex gap-4 items-center">
           {/* LOGOUT BTN */}
           <button
-            className="text-slate-400 hover:text-slate-200 transition-colors"
+            className="text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
             onClick={logout}
           >
             <LogOutIcon className="size-5" />
@@ -93,7 +93,7 @@ function ProfileHeader() {
 
           {/* SOUND TOGGLE BTN */}
           <button
-            className="text-slate-400 hover:text-slate-200 transition-colors"
+            className="text-slate-400 hover:text-slate-200 transition-colors cursor-pointer"
             onClick={() => {
               // play click sound before toggling
               mouseClickSound.currentTime = 0; // reset to start

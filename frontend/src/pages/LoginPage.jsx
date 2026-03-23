@@ -82,7 +82,7 @@ function LoginPage() {
                   <div className="mt-8 text-center">
                     <p className="text-gray-400">
                       Don't have an account?{" "}
-                      <Link to="/signup" className="font-medium text-indigo-400 hover:underline">
+                      <Link to="/signup" className="font-medium text-indigo-400 hover:underline cursor-pointer">
                         Sign Up
                       </Link>
                     </p>

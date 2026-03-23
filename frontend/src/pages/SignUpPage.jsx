@@ -103,7 +103,7 @@ function SignUpPage() {
                   <div className="mt-8 text-center">
                     <p className="text-gray-400">
                       Already have an account?{" "}
-                      <Link to="/login" className="font-medium text-indigo-400 hover:underline transition-all">
+                      <Link to="/login" className="font-medium text-indigo-400 hover:underline transition-all cursor-pointer">
                         Login
                       </Link>
                     </p>
