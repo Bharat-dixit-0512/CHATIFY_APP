@@ -5,15 +5,16 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(),tailwindcss()],
   theme: {
-        extend: {
-            animation: {
-                'border': 'border 4s linear infinite',
-            },
-            keyframes: {
-                'border': {
-                    to: { '--border-angle': '360deg' },
-                }
-            }                      
+    extend: {
+      animation: {
+        // This matches the 'animate-border' class you used
+        'border': 'border 4s linear infinite',
+      },
+      keyframes: {
+        'border': {
+          'to': { '--border-angle': '360deg' },
         },
+      },
     },
+  },
 })
