@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../lib/utils.js";
+import { cookieOptions, generateToken } from "../lib/utils.js";
 import { sendWelcomeEmail } from "../emails/emailHandlers.js";
 import { ENV } from "../lib/env.js";
 import cloudinary from "../lib/cloudinary.js";
@@ -116,12 +116,7 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (_, res) => {
-  // res.clearCookie("jwt", {
-  //   httpOnly: true,
-  //   sameSite: "strict",
-  //   secure: process.env.NODE_ENV !== "development",
-  // });
-  res.cookie("jwt","",{maxAge:0});
+  res.clearCookie("jwt", cookieOptions);
   res.status(200).json({
     message: "Logged out successfully",
   });
