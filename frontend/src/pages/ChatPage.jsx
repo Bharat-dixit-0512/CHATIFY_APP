@@ -12,7 +12,7 @@ function ChatPage() {
   const { activeTab, selectedUser } = useChatStore();
 
   return (
-    <div className="relative w-full max-w-6xl mx-auto h-[100dvh] p-2 sm:p-4 lg:h-[calc(100dvh-2rem)]">
+    <div className="relative w-full max-w-6xl mx-auto h-screen p-2 sm:p-4 lg:h-[calc(100dvh-2rem)]">
       <BorderAnimatedContainer className="h-full overflow-hidden">
         <div className="flex h-full">
           <div
